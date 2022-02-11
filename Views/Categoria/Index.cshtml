@@ -1,0 +1,165 @@
+﻿@using Licorera.Models
+@model List<CategoriaCLS>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Gestión de Categorias</h2>
+<button type="button" onclick="Agregar()" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+    Agregar
+</button>
+
+@using (Ajax.BeginForm("Filtro", " ", new AjaxOptions
+{
+
+    HttpMethod = "POST",
+    UpdateTargetId = "divRol",
+    InsertionMode = InsertionMode.Replace
+}, new { @id = "frmFiltro" }))
+{
+
+    @Html.Label("Buscar categoria")
+    @Html.TextBox("nombreFiltro", null, new { @class = "form-control" })
+    <div id="divRol">
+        @Html.Partial("_TableCategoria", Model)
+    </div>
+}
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalConfirmacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea eliminar la categoria?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div style="padding:1em">
+                <button type="button" id="btnCerrarConfirmacion" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" onclick="EliminarRegistro()" class="btn btn-info">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title encabezado text-info" id="exampleModalLabel">Agrega una nueva categoria</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Ajax.BeginForm("Guardar", "Categoria", null, new AjaxOptions
+            {
+                HttpMethod = "POST",
+                OnSuccess = "Guardar",
+                UpdateTargetId = "error"
+            }))
+            {
+                @Html.Hidden("titulo")
+                <div class="modal-body">
+
+                    <div>
+                        @Html.Label("Nombre Categoria")
+                        @Html.TextBox("nombre", null, new { @class = "form-control" })
+                    </div>
+                    
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnClose" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            }
+            <div id="error" class="text-danger"></div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    var nombre = document.getElementById("nombreFiltro");
+    var frmFiltro = document.getElementById("frmFiltro");
+    nombre.onkeyup = function () {
+
+        $("#frmFiltro").trigger("submit");
+    }
+    function limpiar() {
+        document.getElementById("error").value = ""; 
+        document.getElementById("nombre").value = ""; 
+
+    }
+    function Agregar() {
+        limpiar();
+        var cb = document.querySelector(".encabezado");
+
+        cb.innerHTML = "Agrega una nueva Categoria"; 
+        console.log(cb); 
+        document.getElementById("titulo").value = -1; 
+    }
+
+
+    function Guardar(resultado) {
+
+       
+        // se realizo la insercion
+        if (resultado == "1" || resultado == "0") {
+            $("#frmFiltro").trigger("submit");
+            document.getElementById("btnClose").click();
+            alert("Se guardo con exito");
+        } else {
+
+            if (resultado == "-1") {
+                alert("Ya existe en la base de datos");
+                document.getElementById("error").innerHTML = ""
+            } else {
+                alert("Ocurrio un error");
+            }
+        }
+
+    }
+
+    function Editar(id) {
+
+        document.getElementById("titulo").value = id;  
+        var cb = document.querySelector(".encabezado");
+
+        cb.innerHTML = "Editar Categoria "; 
+    }
+
+
+    function Eliminar(id) {
+
+        document.getElementById("titulo").value = id; 
+    }
+
+    function EliminarRegistro() {
+
+        var iid = document.getElementById("titulo").value; 
+
+        $.get("Categoria/Eliminar/?titulo=" + iid, function (data) {
+
+            if (data == 1) {
+                $("#frmFiltro").trigger("submit");
+                document.getElementById("btnCerrarConfirmacion").click();
+                alert("Se elimino la categoria correctamente");
+            } else {
+                $("#frmFiltro").trigger("submit");
+                document.getElementById("btnCerrarConfirmacion").click();
+                alert("Ocurrio un error"); 
+            }
+
+        })
+
+    }
+</script>

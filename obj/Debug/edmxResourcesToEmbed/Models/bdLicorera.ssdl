@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DBLicoreraModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Carrito">
+    <Key>
+      <PropertyRef Name="IIDCARRITO" />
+    </Key>
+    <Property Name="IIDCARRITO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IIDPRODUCTO" Type="int" />
+    <Property Name="IIDUSUARIO" Type="int" />
+    <Property Name="CANTIDAD" Type="int" />
+  </EntityType>
+  <EntityType Name="Categoria">
+    <Key>
+      <PropertyRef Name="IIDCATEGORIA" />
+    </Key>
+    <Property Name="IIDCATEGORIA" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="NOMBRE" Type="varchar" MaxLength="50" />
+    <Property Name="BHABILTADO" Type="int" />
+  </EntityType>
+  <EntityType Name="Producto">
+    <Key>
+      <PropertyRef Name="IIDPRODUCTO" />
+    </Key>
+    <Property Name="IIDPRODUCTO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="NOMBRE" Type="varchar" MaxLength="50" />
+    <Property Name="DESCRIPCION" Type="varchar" MaxLength="500" />
+    <Property Name="IIDCATEGORIA" Type="int" />
+    <Property Name="BHABILITADO" Type="int" />
+    <Property Name="PRECIO" Type="decimal" Precision="10" Scale="2" />
+    <Property Name="FOTO" Type="varbinary(max)" />
+    <Property Name="NOMBREFOTO" Type="varchar" MaxLength="100" />
+    <Property Name="IIDTIPOPRODUCTO" Type="int" />
+    <Property Name="VARIEDAD" Type="varchar" MaxLength="200" />
+    <Property Name="ENOTECNIA" Type="varchar" MaxLength="200" />
+    <Property Name="COLOR" Type="varchar" MaxLength="50" />
+    <Property Name="AROMA" Type="varchar" MaxLength="100" />
+    <Property Name="TEXTURA" Type="varchar" MaxLength="100" />
+    <Property Name="GRADOALCOHOL" Type="varchar" MaxLength="50" />
+    <Property Name="SABOR" Type="varchar" MaxLength="50" />
+    <Property Name="PAIS" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Rol">
+    <Key>
+      <PropertyRef Name="IIDROL" />
+    </Key>
+    <Property Name="IIDROL" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="NOMBRE" Type="varchar" MaxLength="50" />
+    <Property Name="BHABILITADO" Type="int" />
+  </EntityType>
+  <EntityType Name="Slider">
+    <Key>
+      <PropertyRef Name="IIDSLIDER" />
+    </Key>
+    <Property Name="IIDSLIDER" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="NOMBRE" Type="varchar" MaxLength="100" />
+    <Property Name="DESCRIPCION" Type="varchar" MaxLength="200" />
+    <Property Name="BHABILTADO" Type="int" />
+    <Property Name="FOTO" Type="varbinary(max)" />
+    <Property Name="NOMBREFOTO" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="TIPOPRODUCTO">
+    <Key>
+      <PropertyRef Name="IIDTIPOPRODUCTO" />
+    </Key>
+    <Property Name="IIDTIPOPRODUCTO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="NOMBRE" Type="varchar" MaxLength="100" />
+    <Property Name="BHABILTADO" Type="int" />
+  </EntityType>
+  <EntityType Name="Usuario">
+    <Key>
+      <PropertyRef Name="IIDUSUARIO" />
+    </Key>
+    <Property Name="IIDUSUARIO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EMAIL" Type="varchar" MaxLength="100" />
+    <Property Name="PASSWORD" Type="varchar" MaxLength="100" />
+    <Property Name="IIDROL" Type="int" />
+    <Property Name="BHABILITADO" Type="int" />
+    <Property Name="NOMBRE" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <Association Name="FK_Carrito_Producto">
+    <End Role="Producto" Type="Self.Producto" Multiplicity="0..1" />
+    <End Role="Carrito" Type="Self.Carrito" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Producto">
+        <PropertyRef Name="IIDPRODUCTO" />
+      </Principal>
+      <Dependent Role="Carrito">
+        <PropertyRef Name="IIDPRODUCTO" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Carrito_Usuario">
+    <End Role="Usuario" Type="Self.Usuario" Multiplicity="0..1" />
+    <End Role="Carrito" Type="Self.Carrito" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Usuario">
+        <PropertyRef Name="IIDUSUARIO" />
+      </Principal>
+      <Dependent Role="Carrito">
+        <PropertyRef Name="IIDUSUARIO" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Producto_Categoria">
+    <End Role="Categoria" Type="Self.Categoria" Multiplicity="0..1" />
+    <End Role="Producto" Type="Self.Producto" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Categoria">
+        <PropertyRef Name="IIDCATEGORIA" />
+      </Principal>
+      <Dependent Role="Producto">
+        <PropertyRef Name="IIDCATEGORIA" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Producto_TIPOPRODUCTO">
+    <End Role="TIPOPRODUCTO" Type="Self.TIPOPRODUCTO" Multiplicity="0..1" />
+    <End Role="Producto" Type="Self.Producto" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TIPOPRODUCTO">
+        <PropertyRef Name="IIDTIPOPRODUCTO" />
+      </Principal>
+      <Dependent Role="Producto">
+        <PropertyRef Name="IIDTIPOPRODUCTO" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Usuario_Rol">
+    <End Role="Rol" Type="Self.Rol" Multiplicity="0..1" />
+    <End Role="Usuario" Type="Self.Usuario" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Rol">
+        <PropertyRef Name="IIDROL" />
+      </Principal>
+      <Dependent Role="Usuario">
+        <PropertyRef Name="IIDROL" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DBLicoreraModelStoreContainer">
+    <EntitySet Name="Carrito" EntityType="Self.Carrito" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Categoria" EntityType="Self.Categoria" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Producto" EntityType="Self.Producto" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Rol" EntityType="Self.Rol" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Slider" EntityType="Self.Slider" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TIPOPRODUCTO" EntityType="Self.TIPOPRODUCTO" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Carrito_Producto" Association="Self.FK_Carrito_Producto">
+      <End Role="Producto" EntitySet="Producto" />
+      <End Role="Carrito" EntitySet="Carrito" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Carrito_Usuario" Association="Self.FK_Carrito_Usuario">
+      <End Role="Usuario" EntitySet="Usuario" />
+      <End Role="Carrito" EntitySet="Carrito" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Producto_Categoria" Association="Self.FK_Producto_Categoria">
+      <End Role="Categoria" EntitySet="Categoria" />
+      <End Role="Producto" EntitySet="Producto" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Producto_TIPOPRODUCTO" Association="Self.FK_Producto_TIPOPRODUCTO">
+      <End Role="TIPOPRODUCTO" EntitySet="TIPOPRODUCTO" />
+      <End Role="Producto" EntitySet="Producto" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Usuario_Rol" Association="Self.FK_Usuario_Rol">
+      <End Role="Rol" EntitySet="Rol" />
+      <End Role="Usuario" EntitySet="Usuario" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,96 @@
+﻿@{
+    ViewBag.Title = "Contact";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well well-sm">
+                @using (Ajax.BeginForm("correoContacto", "Home", "", new AjaxOptions
+                {
+
+                    HttpMethod = "POST",
+                    OnSuccess = "Ingresar",
+                    UpdateTargetId = "divRespuesta"
+
+                }, new { @id = "frmLogin", @class= "form-horizontal" })) { 
+                    <fieldset>
+                        <legend class="text-center header">Contacto</legend>
+
+                        <div class="form-group">
+                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>
+                            <div class="col-md-8">
+                                @*@Html.TextBox("nombre", null, new { @class = "form-control bg-dark-x border-0", @placeholder = "Nombre", @required = "true" })*@
+                                <input id="fname" name="nombre" type="text" placeholder="Nombre" class="form-control">
+                            </div>
+                        </div>
+                      
+
+                        <div class="form-group">
+                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-envelope-o bigicon"></i></span>
+                            <div class="col-md-8">
+                                @*@Html.TextBox("correo", null, new { @class = "form-control ", @type = "email", @placeholder = "Correo Electrónico", @required= "true" })*@
+                                <input id="email" name="correo" type="text" placeholder="Correo Electrónico" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-phone-square bigicon"></i></span>
+                            <div class="col-md-8">
+                                @*@Html.TextBox("telefono", null, new { @class = "form-control mt-5 ", @placeholder = "Telefono", @required = "true" })*@
+                                <input id="phone" name="telefono" type="text" placeholder="Telefono" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-pencil-square-o bigicon"></i></span>
+                            <div class="col-md-8">
+                                @*@Html.TextArea("mensaje", null, new { @class = "form-control", @placeholder = "Escribe tu mensaje, te responderemos en un plazo máximo a dos días", @required = "true", @rows="7" })*@
+                                <textarea class="form-control" id="message" name="mensaje" placeholder="Escribe tu mensaje, te responderemos en un plazo máximo a dos días" rows="7"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12 text-center">
+                                <button type="submit" class="btn btn-primary btn-lg">Enviar mensaje</button>
+                            </div>
+                        </div>
+
+                        <div id="divRespuesta"></div>
+
+                    </fieldset>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function limpiar() {
+
+        var controles = document.getElementsByClassName("form-control");
+        for (var i = 0; i < controles.length; i++) {
+            controles[i].value = "";
+        }
+
+        document.getElementById("fupFoto").src = "";
+        document.getElementById("error").innerHTML = "";
+
+    }
+
+    function Ingresar(rpta) {
+
+        if (rpta == "1") {
+
+            alert("El mensaje fue enviado exitosamente");
+            limpiar(); 
+        } else {
+
+            alert("Ocurrio un error");
+            
+        }
+
+
+    }
+</script>

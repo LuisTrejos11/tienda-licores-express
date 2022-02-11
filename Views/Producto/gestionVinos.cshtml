@@ -1,0 +1,253 @@
+﻿@using Licorera.Models
+@model List<VinoCLS>
+@{
+    ViewBag.Title = "Index";
+    List<SelectListItem> listaCategoria = (List<SelectListItem>)ViewBag.listaCategoria;
+    List<SelectListItem> listaTipoProducto = (List<SelectListItem>)ViewBag.listaTipoProducto;
+}
+
+<h2>Gestión de productos</h2>
+
+<button type="button" onclick="Agregar()" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+    Agregar
+</button>
+
+@using (Ajax.BeginForm("FiltroVino", " ", new AjaxOptions
+{
+
+    HttpMethod = "POST",
+    UpdateTargetId = "divRol",
+    InsertionMode = InsertionMode.Replace
+}, new { @id = "frmFiltro" }))
+{
+
+    @Html.Label("Buscar por nombre de producto")
+    @Html.TextBox("nombreFiltro", null, new { @class = "form-control" })
+    <div id="divRol">
+        <div id="divTabla">@Html.Partial("_TableVinos", Model)</div>
+    </div>
+}
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-center text-info" id="exampleModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Ajax.BeginForm("GuardarVino", "Producto", null, new AjaxOptions
+            {
+                HttpMethod = "POST",
+                OnSuccess = "Guardar",
+                UpdateTargetId = "error"
+            }, new { enctype = "multipart/form-data" }))
+            {
+                @Html.TextBox("titulo")
+                <div class="modal-body  text-info">
+
+                    <div>
+                        @Html.Label("Nombre")
+                        @Html.Editor("nombre", null, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    @*<div>
+                        @Html.Label("Descripcion")
+                        @Html.Editor("descripcion", null, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>*@
+
+                    @*<div>
+                        @Html.Label("Categoria")
+                        @Html.DropDownList("iidcategoria", listaCategoria, new { @class = "form-control" })
+                    </div>*@
+
+                    <div>
+                        @Html.Label("Tipo de Producto")
+                        @Html.DropDownList("iidtipoproducto", listaTipoProducto, new { @class = "form-control" })
+                    </div>
+
+
+                    <div>
+                        @Html.Label("Precio")
+                        @Html.Editor("precio", null, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                    </div>
+
+                    <div>
+                        @Html.Label("Descripcion")
+                        @Html.Editor("descripcion", null, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    <div>
+                        @Html.Label("Pais")
+                        @Html.Editor("pais", null, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+
+                    <div>
+                        @Html.Label("Variedad")
+                        @Html.Editor("variedad", null, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+
+                    <div>
+                        @Html.Label("Enotecnia")
+                        @Html.Editor("enotecnia", null, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+
+                    <div>
+                        @Html.Label("Color")
+                        @Html.Editor("color", null, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+
+                    <div>
+                        @Html.Label("Aroma")
+                        @Html.Editor("aroma", null, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+
+                    <div>
+                        @Html.Label("Textura")
+                        @Html.Editor("textura", null, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+
+                    <div>
+                        @Html.Label("Grado de alcohol")
+                        @Html.Editor("gradoAlcohol", null, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+
+                    <div>
+                        @Html.Label("Foto Recuperar")
+                        <img width="150" height="150" id="imgFoto" style="display:block" />
+                        @Html.TextBox("fotico", "", new { type = "file", id = "fupFoto" })
+
+
+                    </div>
+                    <div>
+                        @Html.Hidden("nombreFoto")
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnClose" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            }
+            <div id="error"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalConfirmacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea eliminar el registro?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div style="padding:1em">
+                <button type="button" id="btnCerrarConfirmacion" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" onclick="ConfirmarEliminar()" class="btn btn-danger">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var nombre = document.getElementById("nombreFiltro");
+    nombre.onkeyup = function () {
+
+        $("#frmFiltro").trigger("submit");
+    }
+
+    function limpiar() {
+
+        var controles = document.getElementsByClassName("form-control");
+        for (var i= 0; i < controles.length; i++) {
+            controles[i].value = "";
+        }
+
+        document.getElementById("fupFoto").src = "";
+        document.getElementById("error").innerHTML = "";
+
+    }
+
+    function Agregar() {
+        limpiar();
+        document.getElementById("titulo").value = -1;
+        document.querySelector(".modal-title").innerHTML = "<span>Agrega un nuevo producto</span>";
+
+    }
+
+    function Guardar(rpta) {
+
+        if (rpta == "1") {
+            $("#frmFiltro").trigger("submit");
+            document.getElementById("btnClose").click();
+            alert("Se guardo con correctamente");
+        } else {
+
+            alert("Ocurrio un error");
+        }
+    }
+
+    function Editar(idProducto) {
+        limpiar();
+        document.querySelector(".modal-title").innerHTML = "<span>Editar Vino</span>";
+        document.getElementById("titulo").value = idProducto;
+
+        $.get("Producto/RecuperarInformacion/?titulo=" + idProducto, function (data) {
+
+            document.getElementById("nombre").value = data.nombre;
+         
+            document.getElementById("iidtipoproducto").value = data.iidtipoproducto;
+            document.getElementById("precio").value = data.precio;
+            document.getElementById("imgFoto").src = "data:image/" + data.extension + ";base64," + data.fotoRecuperCadena;
+            document.getElementById("variedad").value = data.variedad;
+            document.getElementById("enotecnia").value = data.enotecnia;
+            document.getElementById("color").value = data.color;
+            document.getElementById("aroma").value = data.aroma;
+            document.getElementById("textura").value = data.textura;
+            document.getElementById("gradoAlcohol").value = data.aroma;
+            document.getElementById("pais").value = data.pais;
+            console.log("Entre"); 
+
+
+        })
+    }
+
+    function Eliminar(idProducto) {
+
+
+        document.getElementById("titulo").value = idProducto;
+    }
+    function ConfirmarEliminar() {
+        var id = document.getElementById("titulo").value;
+        $.get("Producto/Eliminar/?idProducto=" + id, function (data) {
+
+            if (data == 1) {
+                $("#frmFiltro").trigger("submit");
+                document.getElementById("btnCerrarConfirmacion").click();
+                alert(" El registro se elimino correctamente");
+            } else {
+
+                alert("Ocurrió un error");
+            }
+        })
+    }
+
+    var imgFoto = document.getElementById("imgFoto");
+    var fupFoto = document.getElementById("fupFoto");
+    fupFoto.onchange = function () {
+        var files = fupFoto.files[0];
+        var reader = new FileReader();
+        reader.onloadend = function () {
+            imgFoto.src = reader.result;
+            document.getElementById("nombreFoto").value = files.name;
+        }
+        reader.readAsDataURL(files);
+    }
+
+
+</script>

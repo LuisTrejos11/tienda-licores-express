@@ -1,0 +1,343 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="Content/font-awesome.min.css" rel="stylesheet">
+    <link href="Content/prettyPhoto.css" rel="stylesheet">
+    <link href="Content/price-range.css" rel="stylesheet">
+    <link href="Content/animate.css" rel="stylesheet">
+    <link href="Content/responsive.css" rel="stylesheet">
+
+
+
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="@Url.Content("~/Styles/main.css")" rel="stylesheet" type="text/css" />
+    @RenderSection("Styles", false)
+
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+    @*<link rel="shortcut icon" href="images/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">*@
+    @*<link href="css/main.css" rel="stylesheet">*@
+    <link href="css/Site.css" rel="stylesheet">
+</head>
+<body>
+
+    <header id="header">
+        <!--header-->
+        <div class="header_top">
+            <!--header_top-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="contactinfo">
+                            <ul class="nav nav-pills">
+                                <li><a href="#"><i class="fa fa-phone"></i> 60660650</a></li>
+                                <li><a href="#"><i class="fa fa-envelope"></i> licoreraBelen@domain.com</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="social-icons pull-right">
+                            <ul class="nav navbar-nav">
+                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                                <li><a href="#"><i class="fa fa-wathsApp"></i></a></li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--/header_top-->
+
+        <div class="header-middle">
+            <!--header-middle-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 clearfix">
+                        <div class="logo pull-left">
+                           <!-- <a href="index.html"><img src="images/home/logo.png" alt="" /></a>-->
+                            <h2><span>Color</span> Y Cuerpo</h2>
+                        </div>
+
+
+
+                    </div>
+                    <div class="col-md-8 clearfix">
+                        <div class="shop-menu clearfix pull-right">
+                            <ul class="nav navbar-nav">
+
+                                @if (Session["carrito"] != null)
+                                {
+                                    <li><p class="fa fa-shopping-cart">@Html.ActionLink("Carrito ", "carrito", "Carrito")</p></li>
+                                }
+                                
+                                @if (Session["Usuario"] != null)
+                                {
+                                    <li><p>Usuario: @Session["NombreUsuario"]</p></li>
+                                <li><p class="fa fa-lock"> @Html.ActionLink("Cerrar Sesion", "CerrarSession", "Login")</p></li>
+                                }
+                                else { <li ><p class="fa fa-user"> @Html.ActionLink("Iniciar Sesion", "Index", "Login")</p></li>
+
+                                <li><p class="fa fa-user"> @Html.ActionLink("Registrarse ", "Registrarse", "Login")</p></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--/header-middle-->
+
+        <div class="header-bottom">
+            <!--header-bottom-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-9">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                        </div>
+                        <div class="mainmenu pull-left">
+                            <ul class="nav navbar-nav collapse navbar-collapse">
+                                
+                                @if (Session["Usuario"] != null && (int)Session["Rol"] == 1) { 
+                                <li class="dropdown">
+                                    <a href="#">Gestión<i class="fa fa-angle-down  active"></i></a>
+                                    <ul role="menu" class="sub-menu">
+                                      
+                                        <li>@Html.ActionLink("Vinos", "gestionVinos", "Producto")</li>
+                                        <li>@Html.ActionLink("Categorias", "Index", "Categoria")</li>
+                                        <li>@Html.ActionLink("Productos", "Index", "Producto")</li>
+                                        <li>@Html.ActionLink("Usuarios", "Index", "Usuario")</li>
+                                        <li>@Html.ActionLink("Cinta informativa", "Index", "Slider")</li>
+                                    </ul>
+                                </li>
+                                }
+
+                                <li>@Html.ActionLink("Vinos", "Index", "Home")</li>
+                                <li>@Html.ActionLink("Licores y cervezas", "MostrarProductos", "Home")</li>
+                                <li>@Html.ActionLink("Quesos y embutidos", "QuesosYembutidos", "Home")</li>
+                                <li>@Html.ActionLink("Productos Gourmet", "productosGourmet", "Home")</li>
+                                <li>@Html.ActionLink("Acerca de", "About", "Home")</li>
+                                <li class="dropdown">
+                                    <a href="#">Coctelería<i class="fa fa-angle-down"></i></a>
+                                    <ul role="menu" class="sub-menu">
+                                        <li><a href="blog.html">Blog List</a></li>
+                                        <li><a href="blog-single.html">Blog Single</a></li>
+                                    </ul>
+                                </li>
+                               
+                                <li>@Html.ActionLink("Contacto", "Contact", "Home")</li>
+                                
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="search_box pull-right">
+                            <input type="text" placeholder="Buscar" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--/header-bottom-->
+    </header><!--/header-->
+
+    <input id="hdfOculto" type="hidden" value="@Url.Content("~")" />
+
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+       
+    </div>
+
+    <footer id="footer">
+        <!--Footer-->
+        <div class="footer-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="companyinfo">
+                            <h2><span>Color</span>y Cuerpo</h2>
+                            <p>Bodega Gourmet</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-7">
+                        <div class="col-sm-3">
+                            <div class="video-gallery text-center">
+                                <a href="@Url.Action("Index", "Home")">
+                                    <div class="iframe-img">
+                                        
+                                        <img src="~/Resources/1.jpg" />
+                                    </div>
+                                   
+                                </a>
+                                <p>Vinos</p>
+                                
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <div class="video-gallery text-center">
+                                <a href="@Url.Action("MostrarProductos", "Home")">
+                                    <div class="iframe-img">
+                                        <img src="~/Resources/5.jpg" />
+                                    </div>
+                                  
+                                </a>
+                                <p>Licores y Cervezas</p>
+                                
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <div class="video-gallery text-center">
+                                <a href="@Url.Action("QuesosYembutidos", "Home")">
+                                    <div class="iframe-img">
+                                        <img src="~/Resources/3.jpg" />
+                                        
+                                    </div>
+                                  
+                                </a>
+                                <p>Quesos y Embutidos</p>
+                                
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <div class="video-gallery text-center">
+                                <a href="@Url.Action("productosGourmet", "Home")">
+                                    <div class="iframe-img">
+                                        <img src="~/Resources/3.jpg" />
+                                        
+                                    </div>
+                                  
+                                </a>
+                                <p>Productos Gourmet</p>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="address">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3929.945441684095!2d-84.10691648566853!3d9.93849767681822!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8fa0fd0a00e5e5a5%3A0x33bc172c3b8ddaac!2scolor%20y%20cuerpo!5e0!3m2!1ses!2scr!4v1626916550202!5m2!1ses!2scr" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*<div class="footer-widget">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="single-widget">
+                            <h2>Service</h2>
+                            <ul class="nav nav-pills nav-stacked">
+                                <li><a href="#">Online Help</a></li>
+                                <li><a href="#">Contact Us</a></li>
+                                <li><a href="#">Order Status</a></li>
+                                <li><a href="#">Change Location</a></li>
+                                <li><a href="#">FAQ’s</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="single-widget">
+                            <h2>Quock Shop</h2>
+                            <ul class="nav nav-pills nav-stacked">
+                                <li><a href="#">T-Shirt</a></li>
+                                <li><a href="#">Mens</a></li>
+                                <li><a href="#">Womens</a></li>
+                                <li><a href="#">Gift Cards</a></li>
+                                <li><a href="#">Shoes</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="single-widget">
+                            <h2>Policies</h2>
+                            <ul class="nav nav-pills nav-stacked">
+                                <li><a href="#">Terms of Use</a></li>
+                                <li><a href="#">Privecy Policy</a></li>
+                                <li><a href="#">Refund Policy</a></li>
+                                <li><a href="#">Billing System</a></li>
+                                <li><a href="#">Ticket System</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="single-widget">
+                            <h2>About Shopper</h2>
+                            <ul class="nav nav-pills nav-stacked">
+                                <li><a href="#">Company Information</a></li>
+                                <li><a href="#">Careers</a></li>
+                                <li><a href="#">Store Location</a></li>
+                                <li><a href="#">Affillate Program</a></li>
+                                <li><a href="#">Copyright</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-sm-offset-1">
+                        <div class="single-widget">
+                            <h2>About Shopper</h2>
+                            <form action="#" class="searchform">
+                                <input type="text" placeholder="Your email address" />
+                                <button type="submit" class="btn btn-default"><i class="fa fa-arrow-circle-o-right"></i></button>
+                                <p>Get the most recent updates from <br />our site and be updated your self...</p>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>*@
+
+        <div class="footer-bottom" style="background:grey">
+            <div class="container">
+                <div class="row">
+                    
+                   <div class="col-md-6" style="margin:0px">
+                       <p class="pull-right">Diseñado por <span><a target="_blank" href="https://luistrejos11.github.io/mi-portafolio/">Luis Trejos Code <img src="~/Resources/Photo_1621824363580.png" style="width:100px; height:100px" /></a></span></p>
+                       
+                   </div>
+                    
+                </div>
+            </div>
+        </div>
+
+    </footer><!--/Footer-->
+    
+        @Scripts.Render("~/bundles/jquery")
+       
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script src="@Url.Content("~/Scripts/jquery-1.10.2.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
+   
+  
+    <script src="~/js/jquery.scrollUp.min.js"></script>
+    <script src="~/js/price-range.js"></script>
+    <script src="~/js/jquery.prettyPhoto.js"></script>
+    <script src="~/js/main.js"></script>
+</body>
+</html>

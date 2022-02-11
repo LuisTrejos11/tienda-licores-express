@@ -1,0 +1,35 @@
+﻿@using Licorera.Models
+@model List<ProductoCLS>
+
+
+<table class="table table-bordered ">
+    <thead>
+        <tr>
+            <td>@Html.LabelFor(p=>Model[0].iidproducto)</td>
+            <td>@Html.LabelFor(p => Model[0].nombre)</td>
+            <td>@Html.LabelFor(p => Model[0].categoria)</td>
+            <td>@Html.LabelFor(p => Model[0].precio)</td>
+            <td>@Html.LabelFor(p => Model[0].nombreTipoProducto)</td>
+            <td>Operaciones</td>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach (var item in Model) { 
+        <tr>
+
+            <td>@item.iidproducto</td>
+            <td>@item.nombre</td>
+            <td>@item.categoria</td>
+            <td>@item.precio</td>
+            <td>@item.nombreTipoProducto</td>
+            <td>
+                <button type="button" onclick="Editar(@item.iidproducto)" class="btn btn-primary glyphicon glyphicon-edit" data-toggle="modal" data-target="#exampleModal"></button>
+                <button type="button" onclick="Eliminar(@item.iidproducto)" class="btn btn-danger glyphicon glyphicon-trash" data-toggle="modal" data-target="#exampleModalConfirmacion"></button>
+            </td>
+
+        </tr>
+        }
+    </tbody>
+</table>

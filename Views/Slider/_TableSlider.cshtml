@@ -1,0 +1,32 @@
+﻿@using Licorera.Models
+@model List<SliderCLS>
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <td>@Html.LabelFor(p => Model[0].iidslider)</td>
+            <td>@Html.LabelFor(p => Model[0].titulo)</td>
+            <td>@Html.LabelFor(p => Model[0].descripcion)</td>
+            <td>Operaciones</td>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+
+            <tr>
+                <td>@item.iidslider</td>
+                <td>@item.titulo</td>
+                <td>@item.descripcion</td>
+               
+
+                <td>
+                    <button type="button" onclick="Editar(@item.iidslider)" class="btn btn-primary glyphicon glyphicon-edit" data-toggle="modal" data-target="#exampleModal"></button>
+                    <button type="button" onclick="Eliminar(@item.iidslider)" class="btn btn-danger glyphicon glyphicon-trash" data-toggle="modal" data-target="#exampleModalConfirmacion"></button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,80 @@
+﻿@using Licorera.Models
+@{
+    Layout = null;
+    ViewBag.Title = "slider";
+    List<SliderCLS> listaSlider = (List<SliderCLS>)ViewBag.listaSlider;
+}
+
+<section id="slider">
+
+
+    <!--slider-->
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div id="slider-carousel" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        @for (var i = 0; i < listaSlider.Count(); i++)
+                        {
+                            if (i == 0)
+                            {
+                                <li data-target="#slider-carousel" data-slide-to="0" class="active"></li>
+                            }
+                            else
+                            {
+
+                                <li data-target="#slider-carousel" data-slide-to="'+@i+''"></li>
+                            }
+                        }
+
+                    </ol>
+
+                    <div class="carousel-inner">
+                        @for (var i = 0; i < listaSlider.Count(); i++)
+                        {
+
+                            string valor = "";
+                            if (i == 0) { valor = "active"; }
+
+
+
+
+                            <div class="item @valor">
+
+                                @*<div class="col-sm-6">
+                                        <h1><span>Color</span> y Cuerpo</h1>
+                                        <h2>@listaSlider[i].titulo</h2>
+                                        <p>@listaSlider[i].descripcion</p>
+                                        <button type="button" class="btn btn-default get">Get it now</button>
+                                    </div>*@
+                                <div class="col-sm-12 align-items-center">
+                                    @{ // obtener la imagen
+                                        string base64Foto = Convert.ToBase64String(listaSlider[i].foto);
+                                        string extensionArchivo = Path.GetExtension(listaSlider[i].nombreArchivo).Substring(1);
+                                        string cadena = "data:image/" + extensionArchivo + ";base64," + base64Foto;
+
+                                    }
+
+
+                                    <img src="@cadena" class="girl img-responsive" alt="" style="width: 100%; height: 25vw; object-fit:fill" />
+
+                                </div>
+                            </div>
+
+                                        }
+                    </div>
+
+                    <a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a href="#slider-carousel" class="right control-carousel hidden-xs" data-slide="next">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</section><!--/slider-->
+

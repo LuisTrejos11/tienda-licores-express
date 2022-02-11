@@ -1,0 +1,240 @@
+﻿@using PagedList.Mvc
+@using Licorera.Models
+@model PagedList.IPagedList<ProductoCLS>
+
+
+
+
+@{
+    ViewBag.Title = "Home Page";
+
+    List<SelectListItem> listaCat = (List<SelectListItem>)ViewBag.listaCategoria;
+    List<ProductoCLS> listaProdCat = (List<ProductoCLS>)ViewBag.listaProductosCategoria;
+    List<SliderCLS> listaSlider = (List<SliderCLS>)ViewBag.listaSlider;
+
+    var paginador = ViewBag.modelo;
+
+}
+
+
+
+@{Html.RenderAction("slider");}
+
+
+
+<section>
+    @using (Html.BeginForm("productosGourmet", "Home", FormMethod.Get, new { @id = "frmBuscar" }))
+    {
+
+
+
+
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="left-sidebar">
+                        <h2>Busqueda</h2>
+                        <div class="panel-group category-products" id="accordian">
+                            <!--category-productsr-->
+
+
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+
+                                    <h4 class="panel-title"></h4>
+
+
+                                    @Html.Label("Nombre del producto", new { @class = "text-warning" })
+                                    @Html.Editor("nombreProd", null, new { htmlAttributes = new { @class = "form-control" } })
+
+
+                                    @Html.Label("Rango de precios", new { @class = "text-warning text-center" })
+                                    <input type="range" class="form-range" min="0" max="200000" id="rango">
+
+                                    <h4 id="valorRango" class="text-warning text-center"></h4>
+
+                                    @Html.Hidden("valorObtenidoRango", new { @class = "form-control" })
+
+                                    <div class="vh-100 row text-center align-items-center justify-content-center ">
+                                        <div class="col-auto">
+                                            <input type="submit" value="Buscar" class="btn btn-warning" />
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+
+                        </div><!--/category-products-->
+
+
+
+
+
+
+                        
+
+                        @{Html.RenderAction("banners");}
+
+                    </div>
+                </div>
+
+                <div class="col-sm-9 padding-right">
+
+
+
+
+                    <div class="features_items">
+                        <!--features_items-->
+                        <h2 class="title text-center">Productos Gourmet</h2>
+
+
+                        <div id="divProd">
+                            @foreach (var item in Model)
+                            {
+                                <div class="col-sm-4">
+
+
+                                    <div class="product-image-wrapper">
+                                        <div class="single-products">
+                                            <div class="productinfo text-center">
+                                                @{ // obtener la imagen
+                                                    string base64Foto = Convert.ToBase64String(item.foto);
+                                                    string extensionArchivo = Path.GetExtension(item.nombreArchivo).Substring(1);
+                                                    string cadena = "data:image/" + extensionArchivo + ";base64," + base64Foto;
+
+                                                }
+
+                                                <img src="@cadena" alt="" style="width: 100%; height: 20vw; object-fit: cover" />
+                                                <h2>₡@item.precio</h2>
+                                                <p>@item.nombre</p>
+                                                
+                                            </div>
+                                            <div class="product-overlay">
+                                                <div class="overlay-content">
+                                                    <h2>₡@item.precio</h2>
+                                                    <p>@item.nombre</p>
+
+                                                    <button type="button" class="btn btn-default add-to-cart" onclick="abrirModal(@item.iidproducto)" data-toggle="modal" data-target=".bd-example-modal-lg">
+                                                        <i class="fa fa-eye"></i> Ver Más
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="choose">
+                                            <ul class="nav nav-pills nav-justified">
+                                                
+                                                <li>@Html.ActionLink(" + Agregar al pedido", "AgregaCarrito", "Carrito", new { Id = item.iidproducto }, null)</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+
+
+
+
+                                </div>
+
+
+
+
+                                                    }
+
+                        </div>
+
+                    </div>
+                
+
+                </div>
+
+                @*Paginacion*@
+                <div class="col-sm-9 text-center">
+                    <br />
+                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                    <br />
+                    Total Item Count @Model.TotalItemCount
+
+                    @Html.PagedListPager(Model, page => Url.Action("productosGourmet", "Home", new { page, pageSize = ViewBag.pageSize }))
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+                                                    }
+</section>
+
+
+@*Modal de vinos*@
+
+
+
+<!-- Modal -->
+@{Html.RenderAction("Modal");}
+
+
+<script>
+
+
+
+
+
+    var rango = document.getElementById("rango");
+    var valorRango = document.getElementById("valorRango");
+    var nombreProd = document.getElementById("nombreProd");
+
+    rango.oninput = () => {
+        valorRango.innerHTML = "₡"+ " "+ rango.value;
+
+
+    }
+
+    rango.onchange = () => {
+        document.getElementById("valorObtenidoRango").value = rango.value;
+
+
+    }
+
+
+
+
+    var controles = document.getElementsByClassName("form-control");
+    var ncontroles = controles.length;
+    var frmBuscar = document.getElementById("frmBuscar")
+    document.getElementById("valorObtenidoRango").value = 0;
+
+    console.log(controles);
+
+
+    async function abrirModal(idProducto) {
+        document.getElementById("nombre").innerHTML = "nada";
+        let url = "Home/RecuperarInformacion/?titulo=" + idProducto;
+        var raiz = document.getElementById("hdfOculto").value;
+        var UrlCompleta = window.location.protocol + "//" + window.location.host + "/" + raiz + url;
+        try {
+            document.getElementById("nombre").innerHTML = "nada22";
+            let res = await fetch(UrlCompleta);
+
+            var obj;
+
+            res.json().then(function (data) {
+                document.getElementById("imgFoto").src = "data:image/" + data.extension + ";base64," + data.fotoRecuperCadena;
+                document.getElementById("nombre").innerHTML = data.nombre;
+                document.getElementById("descripcion").innerHTML = "Descripción:" + " " + data.descripcion;
+                document.getElementById("precio").innerHTML = "Precio:" + " " + data.precio;
+
+
+            })
+
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+</script>

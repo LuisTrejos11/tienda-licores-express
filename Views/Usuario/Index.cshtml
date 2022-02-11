@@ -1,0 +1,195 @@
+﻿@using Licorera.Models
+@model List<UsuarioCLS>
+
+@{
+    ViewBag.Title = "Index";
+    List<SelectListItem> listaRol = (List<SelectListItem>)ViewBag.listaRol;
+
+}
+
+<h2>Gestión de Administradores</h2>
+
+<button type="button" onclick="Agregar()" class="btn btn-info" data-toggle="modal" data-target="#exampleModal">
+    Agregar nuevo administrador
+</button>
+
+
+@using (Ajax.BeginForm("Filtrar", "Usuario", null,
+                            new AjaxOptions
+                            {
+                                HttpMethod = "POST",
+                                UpdateTargetId = "divUsuario",
+                                InsertionMode = InsertionMode.Replace
+                            }, new { @id = "frmFiltrado" }))
+{
+
+    @Html.Label("Ingrese nombre de la persona")
+    @Html.TextBox("nombrePersona", null, new { @class = "form-control" })
+
+    <div id="divUsuario">
+        @Html.Partial("_TableUsuario", Model)
+    </div>
+} 
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content text">
+            <div class="modal-header ">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Ajax.BeginForm("GuardarAdmin", "Usuario", null, new AjaxOptions
+            {
+                HttpMethod = "POST",
+                OnSuccess = "Guardar",
+                InsertionMode = InsertionMode.Replace,
+                UpdateTargetId = "divError"
+            }))
+            {
+                @Html.Hidden("titulo")
+ 
+                <div class="modal-body">
+
+                    <div>
+                        @Html.Label("Nombre Usuario")
+                        @Html.TextBox("nombre", null, new { @class = "form-control" })
+                    </div>
+                    <div>
+                        @Html.Label("Email")
+                        @Html.TextBox("email", null, new { @class = "form-control" })
+                    </div>
+                    <div id="divContraOcultar">
+                        @Html.Label("Contraseña")
+                        @Html.Password("passwword", null, new { @class = "form-control" })
+                    </div>
+                   
+                    
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnClose" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            }
+            <div id="divError">
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="exampleModalConfirmacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Dese guardar los cambios?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div style="padding:1em">
+                <button type="button" id="btnCerrarConfirmacion" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" onclick="EliminarRegistro()" class="btn btn-info">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<script>
+
+    function Limpiar() {
+        var controles = document.getElementsByClassName("form-control");
+        var control;
+        for (var i = 0; i < controles.length; i++) {
+            control = controles[i];
+            control.value = "";
+        }
+        document.getElementById("divError").innerHTML = "";
+    }
+
+    document.getElementById("nombrePersona").onkeyup = function () {
+
+        $("#frmFiltrado").trigger("submit"); 
+
+    }
+
+    function Agregar() {
+
+        Limpiar();
+        document.getElementById("titulo").value = -1; 
+    }
+
+
+    function Guardar(rpta) {
+
+        if (rpta == "1") {
+
+            alert("El usuario se agrego correctamente");
+            document.getElementById("btnClose").click();
+            $("#frmFiltrado").trigger("submit"); 
+        } else if (rpta == "-1") {
+
+            alert("Ya existe un registro con ese nombre");
+            document.getElementById("btnClose").click();
+            $("#frmFiltrado").trigger("submit"); 
+        } else {
+
+            alert("Ocurrio un error");
+            document.getElementById("btnClose").click();
+        }
+    }
+
+    function Eliminar(idUsuario) {
+
+        document.getElementById("titulo").value = idUsuario;
+    }
+
+    function EliminarRegistro() {
+
+        var iid = document.getElementById("titulo").value;
+
+        $.get("Usuario/Eliminar/?titulo=" + iid, function (data) {
+        
+            if (data == 1) {
+               
+                alert("El registro se eliminó correctamente");
+                $("#frmFiltrado").trigger("submit"); 
+                document.getElementById("btnCerrarConfirmacion").click();
+            } else {
+
+                alert("Ocurrio un error");
+            }
+
+        })
+    }
+
+    function Editar(iidusuario) {
+        console.log(iidusuario);
+        
+        document.getElementById("titulo").value = iidusuario;
+
+        $.get("Usuario/recuperarInformacion/?titulo=" + iidusuario, function (data) {
+            document.getElementById("nombre").value = data.nombre;
+            document.getElementById("email").value = data.email;
+        });
+
+    }
+
+</script>

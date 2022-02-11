@@ -1,0 +1,39 @@
+﻿@using Licorera.Models
+@model List<UsuarioCLS>
+
+
+<table class="table table-bordered ">
+    <thead>
+        <tr>
+            <th>Id Usuario</th>
+            <th> Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Operaciones</th>
+        </tr>
+
+
+    </thead>
+
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+
+            <tr>
+                <td>@item.iidusuario</td>
+                <td>@item.nombre</td>
+                <td>@item.email</td>
+                <td>@item.nombreRol</td>
+
+                <td>
+                    <button type="button" onclick="Editar(@item.iidusuario)" class="btn btn-primary glyphicon glyphicon-edit" data-toggle="modal" data-target="#exampleModal"></button>
+                    <button type="button" onclick="Eliminar(@item.iidusuario)" class="btn btn-danger glyphicon glyphicon-trash" data-toggle="modal" data-target="#exampleModalConfirmacion"></button>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+
+
+</table>

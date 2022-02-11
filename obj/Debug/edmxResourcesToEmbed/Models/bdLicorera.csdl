@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DBLicoreraModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Carrito">
+    <Key>
+      <PropertyRef Name="IIDCARRITO" />
+    </Key>
+    <Property Name="IIDCARRITO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IIDPRODUCTO" Type="Int32" />
+    <Property Name="IIDUSUARIO" Type="Int32" />
+    <Property Name="CANTIDAD" Type="Int32" />
+    <NavigationProperty Name="Producto" Relationship="Self.FK_Carrito_Producto" FromRole="Carrito" ToRole="Producto" />
+    <NavigationProperty Name="Usuario" Relationship="Self.FK_Carrito_Usuario" FromRole="Carrito" ToRole="Usuario" />
+  </EntityType>
+  <EntityType Name="Categoria">
+    <Key>
+      <PropertyRef Name="IIDCATEGORIA" />
+    </Key>
+    <Property Name="IIDCATEGORIA" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NOMBRE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="BHABILTADO" Type="Int32" />
+    <NavigationProperty Name="Producto" Relationship="Self.FK_Producto_Categoria" FromRole="Categoria" ToRole="Producto" />
+  </EntityType>
+  <EntityType Name="Producto">
+    <Key>
+      <PropertyRef Name="IIDPRODUCTO" />
+    </Key>
+    <Property Name="IIDPRODUCTO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NOMBRE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="DESCRIPCION" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="IIDCATEGORIA" Type="Int32" />
+    <Property Name="BHABILITADO" Type="Int32" />
+    <Property Name="PRECIO" Type="Decimal" Precision="10" Scale="2" />
+    <NavigationProperty Name="Carrito" Relationship="Self.FK_Carrito_Producto" FromRole="Producto" ToRole="Carrito" />
+    <NavigationProperty Name="Categoria" Relationship="Self.FK_Producto_Categoria" FromRole="Producto" ToRole="Categoria" />
+    <Property Name="FOTO" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="NOMBREFOTO" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="IIDTIPOPRODUCTO" Type="Int32" />
+    <NavigationProperty Name="TIPOPRODUCTO" Relationship="DBLicoreraModel.FK_Producto_TIPOPRODUCTO" FromRole="Producto" ToRole="TIPOPRODUCTO" />
+    <Property Name="VARIEDAD" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="ENOTECNIA" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="COLOR" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="AROMA" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="TEXTURA" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="GRADOALCOHOL" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="SABOR" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="PAIS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="Rol">
+    <Key>
+      <PropertyRef Name="IIDROL" />
+    </Key>
+    <Property Name="IIDROL" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NOMBRE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="BHABILITADO" Type="Int32" />
+    <NavigationProperty Name="Usuario" Relationship="Self.FK_Usuario_Rol" FromRole="Rol" ToRole="Usuario" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Usuario">
+    <Key>
+      <PropertyRef Name="IIDUSUARIO" />
+    </Key>
+    <Property Name="IIDUSUARIO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="EMAIL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="PASSWORD" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="IIDROL" Type="Int32" />
+    <Property Name="BHABILITADO" Type="Int32" />
+    <Property Name="NOMBRE" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Carrito" Relationship="Self.FK_Carrito_Usuario" FromRole="Usuario" ToRole="Carrito" />
+    <NavigationProperty Name="Rol" Relationship="Self.FK_Usuario_Rol" FromRole="Usuario" ToRole="Rol" />
+  </EntityType>
+  <Association Name="FK_Carrito_Producto">
+    <End Role="Producto" Type="Self.Producto" Multiplicity="0..1" />
+    <End Role="Carrito" Type="Self.Carrito" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Producto">
+        <PropertyRef Name="IIDPRODUCTO" />
+      </Principal>
+      <Dependent Role="Carrito">
+        <PropertyRef Name="IIDPRODUCTO" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Carrito_Usuario">
+    <End Role="Usuario" Type="Self.Usuario" Multiplicity="0..1" />
+    <End Role="Carrito" Type="Self.Carrito" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Usuario">
+        <PropertyRef Name="IIDUSUARIO" />
+      </Principal>
+      <Dependent Role="Carrito">
+        <PropertyRef Name="IIDUSUARIO" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Producto_Categoria">
+    <End Role="Categoria" Type="Self.Categoria" Multiplicity="0..1" />
+    <End Role="Producto" Type="Self.Producto" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Categoria">
+        <PropertyRef Name="IIDCATEGORIA" />
+      </Principal>
+      <Dependent Role="Producto">
+        <PropertyRef Name="IIDCATEGORIA" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Usuario_Rol">
+    <End Role="Rol" Type="Self.Rol" Multiplicity="0..1" />
+    <End Role="Usuario" Type="Self.Usuario" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Rol">
+        <PropertyRef Name="IIDROL" />
+      </Principal>
+      <Dependent Role="Usuario">
+        <PropertyRef Name="IIDROL" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DBLicoreraEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Carrito" EntityType="Self.Carrito" />
+    <EntitySet Name="Categoria" EntityType="Self.Categoria" />
+    <EntitySet Name="Producto" EntityType="Self.Producto" />
+    <EntitySet Name="Rol" EntityType="Self.Rol" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="Usuario" EntityType="Self.Usuario" />
+    <AssociationSet Name="FK_Carrito_Producto" Association="Self.FK_Carrito_Producto">
+      <End Role="Producto" EntitySet="Producto" />
+      <End Role="Carrito" EntitySet="Carrito" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Carrito_Usuario" Association="Self.FK_Carrito_Usuario">
+      <End Role="Usuario" EntitySet="Usuario" />
+      <End Role="Carrito" EntitySet="Carrito" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Producto_Categoria" Association="Self.FK_Producto_Categoria">
+      <End Role="Categoria" EntitySet="Categoria" />
+      <End Role="Producto" EntitySet="Producto" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Usuario_Rol" Association="Self.FK_Usuario_Rol">
+      <End Role="Rol" EntitySet="Rol" />
+      <End Role="Usuario" EntitySet="Usuario" />
+    </AssociationSet>
+    <EntitySet Name="TIPOPRODUCTO" EntityType="DBLicoreraModel.TIPOPRODUCTO" />
+    <AssociationSet Name="FK_Producto_TIPOPRODUCTO" Association="DBLicoreraModel.FK_Producto_TIPOPRODUCTO">
+      <End Role="TIPOPRODUCTO" EntitySet="TIPOPRODUCTO" />
+      <End Role="Producto" EntitySet="Producto" />
+    </AssociationSet>
+    <EntitySet Name="Slider" EntityType="DBLicoreraModel.Slider" />
+  </EntityContainer>
+  <EntityType Name="TIPOPRODUCTO">
+    <Key>
+      <PropertyRef Name="IIDTIPOPRODUCTO" />
+    </Key>
+    <Property Name="IIDTIPOPRODUCTO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NOMBRE" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Producto" Relationship="DBLicoreraModel.FK_Producto_TIPOPRODUCTO" FromRole="TIPOPRODUCTO" ToRole="Producto" />
+    <Property Name="BHABILTADO" Type="Int32" />
+  </EntityType>
+  <Association Name="FK_Producto_TIPOPRODUCTO">
+    <End Type="DBLicoreraModel.TIPOPRODUCTO" Role="TIPOPRODUCTO" Multiplicity="0..1" />
+    <End Type="DBLicoreraModel.Producto" Role="Producto" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TIPOPRODUCTO">
+        <PropertyRef Name="IIDTIPOPRODUCTO" />
+      </Principal>
+      <Dependent Role="Producto">
+        <PropertyRef Name="IIDTIPOPRODUCTO" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Slider">
+    <Key>
+      <PropertyRef Name="IIDSLIDER" />
+    </Key>
+    <Property Name="IIDSLIDER" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NOMBRE" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="DESCRIPCION" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="BHABILTADO" Type="Int32" />
+    <Property Name="FOTO" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="NOMBREFOTO" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+  </EntityType>
+</Schema>

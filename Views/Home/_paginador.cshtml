@@ -1,0 +1,34 @@
+﻿@model Licorera.Models.PaginadorCLS
+
+
+@{
+    var cantidadPaginas = (int)Math.Ceiling((double)Model.TotalDeRegistros / Model.RegistrosPorPagina);
+
+}
+
+@*funcionalidad anterior y siguiente*@
+
+
+<ul class="pagination">
+    @if (Model.PaginaActual == 1)
+    {
+        Model.ValoresQueryString["pagina"] = 1;
+        <li class="disabled">@Html.ActionLink("Anterior", null, Model.ValoresQueryString)</li>
+    }
+    else
+    {
+        Model.ValoresQueryString["pagina"] = Model.PaginaActual - 1;
+        <li>@Html.ActionLink("Anterior", null, Model.ValoresQueryString)</li>
+    }
+
+    @if (Model.PaginaActual == cantidadPaginas)
+    {
+        Model.ValoresQueryString["pagina"] = cantidadPaginas;
+        <li class="disabled">@Html.ActionLink("Siguiente", null, Model.ValoresQueryString)</li>
+    }
+    else
+    {
+        Model.ValoresQueryString["pagina"] = Model.PaginaActual + 1;
+        <li>@Html.ActionLink("Siguiente", null, Model.ValoresQueryString)</li>
+    }
+</ul>
